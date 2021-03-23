@@ -3,11 +3,15 @@ const phrase = document.getElementById('phrase');
 const overlay = document.getElementById('overlay');
 const buttonReset = document.getElementsByClassName('btn__reset')[0];
 let missed = 0;
-const phrases = ["eat hot chip", 'go tuck yourself in', 'rubber babies', 'hey arnold', 'the things i do for love'];
+const phrases = ["eat hot chip", 
+                'go tuck yourself in', 
+                'rubber babies', 
+                'hey arnold', 
+                'the things i do for love', 
+                'ya like jazz',
+                'people like grapes',
+                'mother get my celebratory clean diaper'];
 
-buttonReset.addEventListener('click', () => {
-    overlay.style.display = "none";
-    });
 
 function getRandomPhraseAsArray(arr) {
     //choose random phrase from array 
@@ -35,3 +39,33 @@ function addPhraseToDisplay(arr) {
         phrase.appendChild(li);
     }
 }
+//check if button user clicks is in the "letter" class
+function checkLetter(button) {
+    const ListLI = phrase.getElementsByTagName('li');
+    let match = null;
+    for (let i = 0; i<ListLI.length; i++) {
+        //if button text === letter li text
+        if (ListLI[i].className==="letter" && button.textContent === ListLI[i].textContent) {
+            //when match is found, letter li gets "show" class & match = letter
+            ListLI[i].classList.add("show");
+            match = button.textContent;
+            //return match, exit loop and function
+            return match; 
+        } 
+    }
+    //if no match found, return match = null, exit function
+    return match;
+}
+
+//listen for the "Start Game" button to be clicked
+buttonReset.addEventListener('click', () => {
+    overlay.style.display = "none";
+    });
+
+//listen for onscreen keyboard clicks
+qwerty.addEventListener("click", (e) => {
+    //do stuff
+});
+
+const phraseArray = getRandomPhraseAsArray(phrases);
+addPhraseToDisplay(phraseArray);
