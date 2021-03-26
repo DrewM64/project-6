@@ -3,10 +3,10 @@ const phrase = document.getElementById('phrase');
 const overlay = document.getElementById('overlay');
 const heading = overlay.getElementsByTagName("h2")[0];
 const buttonReset = document.getElementsByClassName('btn__reset')[0];
-let missed = 0;
 const letter = document.getElementsByClassName("letter");
 let show = document.getElementsByClassName("show");
-const scoreboard = document.getElementById("scoreboard").firstElementChild;
+let missed = 0;
+const hearts = document.querySelectorAll('img');
 const phrases = ["eat hot chip", 
                 'go tuck yourself in', 
                 'rubber babies', 
@@ -75,7 +75,9 @@ function checkWin() {
         heading.textContent = "You lose..."
         overlay.style.display = "flex";
         buttonReset.textContent = "Play again?"
-        resetGame();
+        buttonReset.addEventListener('click', () => {
+            resetGame();
+            });
     }
 }
 
@@ -91,15 +93,26 @@ qwerty.addEventListener("click", (e) => {
         e.target.disabled=true;
         let letterFound = checkLetter(e.target);
         if (!letterFound) {
-            scoreboard.removeChild(scoreboard.lastElementChild);
             missed++;
+            const lostHeart = 5 - missed;
+            hearts[lostHeart].setAttribute("src","images/lostHeart.png");
         }
     }
     checkWin();
 });
 
 function resetGame() {
-    
+    //reset hearts
+    const lostHeart = 5 - missed;
+    for (let i =4; i>=lostHeart; i--) {
+        hearts[i].setAttribute("src","images/liveHeart.png");
+    }
+    //reset overlay
+    if (missed >= 5) {
+        overlay.classList.remove("lose");
+    } else if (letter.length === show.length) {
+        overlay.classList.remove("win");
+    }
     //set missed to zero
     missed = 0;
     //recreate keyboard
