@@ -4,6 +4,8 @@ const overlay = document.getElementById('overlay');
 const heading = overlay.getElementsByTagName("h2")[0];
 const buttonReset = document.getElementsByClassName('btn__reset')[0];
 let missed = 0;
+const letter = document.getElementsByClassName("letter");
+let show = document.getElementsByClassName("show");
 const scoreboard = document.getElementById("scoreboard").firstElementChild;
 const phrases = ["eat hot chip", 
                 'go tuck yourself in', 
@@ -60,27 +62,29 @@ function checkLetter(button) {
 
 // checks if user wins or loses by checking shown letter length, or missed count
 function checkWin() {
-    const letter = document.getElementsByClassName("letter");
-    let show = document.getElementsByClassName("show");
-
     if (letter.length === show.length) {
         overlay.classList.add("win");
         heading.textContent = "Congrats, you won!"
         overlay.style.display = "flex";
+        buttonReset.textContent = "Play again?"
+        buttonReset.addEventListener('click', () => {
+            resetGame();
+            });
     } else if (missed >= 5) {
         overlay.classList.add("lose");
         heading.textContent = "You lose..."
         overlay.style.display = "flex";
+        buttonReset.textContent = "Play again?"
+        resetGame();
     }
 }
 
 //listen for the "Start Game" button to be clicked
 buttonReset.addEventListener('click', () => {
     overlay.style.display = "none";
-    //if (buttonReset.textContent === "")
     });
 
-//listen for onscreen keyboard clicks
+//listen for onscreen keyboard clicks, check if letter is found
 qwerty.addEventListener("click", (e) => {
     if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('chosen')) {
         e.target.classList.add("chosen");
@@ -94,7 +98,25 @@ qwerty.addEventListener("click", (e) => {
     checkWin();
 });
 
+function resetGame() {
+    
+    //set missed to zero
+    missed = 0;
+    //recreate keyboard
+    const chosenButtons = document.querySelectorAll(".chosen");
+    for (let i = 0; i < chosenButtons.length; i++) {
+        chosenButtons[i].disabled = false;
+        chosenButtons[i].classList.remove("chosen");
+    }
+    //generate new phrase
+    while (phrase.firstChild) {
+        phrase.removeChild(phrase.lastChild);
+    }
+    phraseArray = getRandomPhraseAsArray(phrases);
+    addPhraseToDisplay(phraseArray);
+
+}
 
 
-const phraseArray = getRandomPhraseAsArray(phrases);
+let phraseArray = getRandomPhraseAsArray(phrases);
 addPhraseToDisplay(phraseArray);
